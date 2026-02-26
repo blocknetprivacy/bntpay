@@ -10,12 +10,12 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="BNTPAY">
 <meta name="twitter:description" content="Payment links for Blocknet">
-<meta name="theme-color" content="#aaff00">
+<meta name="theme-color" content="#000000">
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body {
-  background: #af0;
-  color: #000;
+  background: #000;
+  color: #b0b0b0;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   min-height: 100vh;
   display: flex;
@@ -29,12 +29,13 @@ body {
   font-weight: 900;
   font-style: italic;
   letter-spacing: -2px;
+  color: #af0;
   user-select: none;
 }
 .sub {
   font-size: 15px;
   margin-top: 12px;
-  opacity: 0.6;
+  color: #555;
 }
 .payment { text-align: center; max-width: 600px; width: 100%; }
 .payment .brand { margin-bottom: 48px; }
@@ -44,9 +45,9 @@ body {
   text-align: left;
   display: inline-block;
 }
-.pay-detail .label { opacity: 0.5; }
-.pay-detail .value { font-weight: bold; }
-.pay-detail .memo-value { font-style: italic; }
+.pay-detail .label { color: #555; }
+.pay-detail .value { color: #af0; font-weight: bold; }
+.pay-detail .memo-value { color: #eee; font-style: italic; }
 .pay-actions {
   margin-top: 48px;
   display: flex;
@@ -55,23 +56,23 @@ body {
   gap: 16px;
 }
 .open-btn {
-  background: #000;
-  color: #af0;
+  background: #af0;
+  color: #000;
   border: none;
   padding: 16px 32px;
   font: bold 16px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   cursor: pointer;
-  transition: opacity 0.2s;
+  transition: background 0.2s;
   width: 100%;
   max-width: 320px;
 }
-.open-btn:hover { opacity: 0.85; }
+.open-btn:hover { background: #cf3; }
 .fallback {
   margin-top: 40px;
   font-size: 14px;
-  opacity: 0.5;
+  color: #555;
 }
-.fallback a { color: #000; }
+.fallback a { color: #af0; }
 .landing { text-align: center; }
 .landing .brand { margin-bottom: 16px; }
 .example {
@@ -79,9 +80,10 @@ body {
   text-align: left;
   display: inline-block;
   font-size: 13px;
-  opacity: 0.45;
+  color: #333;
   line-height: 2;
 }
+.example b { color: #555; }
 </style>
 </head>
 <body>
