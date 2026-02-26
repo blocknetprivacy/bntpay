@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BNTPAY</title>
+<meta property="og:title" content="BNTPAY">
+<meta property="og:description" content="Payment links for Blocknet">
+<meta property="og:site_name" content="BNTPAY">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="BNTPAY">
+<meta name="twitter:description" content="Payment links for Blocknet">
+<meta name="theme-color" content="#aaff00">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #af0;
+  color: #000;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+.brand {
+  font-size: clamp(48px, 10vw, 96px);
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: -2px;
+  user-select: none;
+}
+.sub {
+  font-size: 15px;
+  margin-top: 12px;
+  opacity: 0.6;
+}
+.payment { text-align: center; max-width: 600px; width: 100%; }
+.payment .brand { margin-bottom: 48px; }
+.pay-detail {
+  font-size: clamp(16px, 3vw, 22px);
+  line-height: 2;
+  text-align: left;
+  display: inline-block;
+}
+.pay-detail .label { opacity: 0.5; }
+.pay-detail .value { font-weight: bold; }
+.pay-detail .memo-value { font-style: italic; }
+.pay-actions {
+  margin-top: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+.open-btn {
+  background: #000;
+  color: #af0;
+  border: none;
+  padding: 16px 32px;
+  font: bold 16px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  width: 100%;
+  max-width: 320px;
+}
+.open-btn:hover { opacity: 0.85; }
+.fallback {
+  margin-top: 40px;
+  font-size: 14px;
+  opacity: 0.5;
+}
+.fallback a { color: #000; }
+.landing { text-align: center; }
+.landing .brand { margin-bottom: 16px; }
+.example {
+  margin-top: 40px;
+  text-align: left;
+  display: inline-block;
+  font-size: 13px;
+  opacity: 0.45;
+  line-height: 2;
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+(function () {
+  var path = window.location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
+  var params = new URLSearchParams(window.location.search);
+  var app = document.getElementById('app');
+
+  function escapeHtml(s) {
+    var d = document.createElement('div');
+    d.appendChild(document.createTextNode(s));
+    return d.innerHTML;
+  }
+
+  if (!path) {
+    app.innerHTML =
+      '<div class="landing">' +
+        '<div class="brand">BNTPAY</div>' +
+        '<div class="sub">Payment links for Blocknet</div>' +
+        '<div class="example">' +
+          'bntpay.com/<b>ADDRESS</b>?amount=<b>100</b>&amp;memo=<b>invoice-42</b>' +
+        '</div>' +
+      '</div>';
+    return;
+  }
+
+  var address = decodeURIComponent(path);
+  var amount = params.get('amount') || '';
+  var memo = params.get('memo') || '';
+
+  var uri = 'blocknet://' + address;
+  var uriParams = [];
+  if (amount) uriParams.push('amount=' + encodeURIComponent(amount));
+  if (memo) uriParams.push('memo=' + encodeURIComponent(memo));
+  if (uriParams.length) uri += '?' + uriParams.join('&');
+
+  var displayAddress = address;
+  if (address.charAt(0) !== '$' && address.charAt(0) !== '@' && address.length > 20) {
+    displayAddress = address.substring(0, 12) + '...' + address.substring(address.length - 8);
+  }
+
+  var amountDisplay = '';
+  if (amount) {
+    var parts = parseFloat(amount).toFixed(8).split('.');
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    amountDisplay = parts.join('.');
+  }
+
+  var shortAddr = address;
+  if (address.charAt(0) !== '$' && address.charAt(0) !== '@' && address.length > 20)
+    shortAddr = address.substring(0, 4) + '...' + address.substring(address.length - 4);
+  var desc = 'Pay ' + shortAddr + (amount ? ' ~' + amount + ' BNT' : '') + ' on Blocknet';
+  document.title = 'BNTPAY \u2014 ' + desc;
+
+  var html =
+    '<div class="payment">' +
+      '<div class="brand">BNTPAY</div>' +
+      '<div class="pay-detail">' +
+        '<div><span class="label">Pay </span><span class="value">' + escapeHtml(displayAddress) + '</span></div>';
+  if (amount) {
+    html += '<div><span class="label">Amount </span><span class="value">' + amountDisplay + ' BNT</span></div>';
+  }
+  if (memo) {
+    html += '<div><span class="label">Memo </span><span class="memo-value">&ldquo;' + escapeHtml(memo) + '&rdquo;</span></div>';
+  }
+  html +=
+      '</div>' +
+      '<div class="pay-actions">' +
+        '<button class="open-btn" id="open-btn">Open in Wallet</button>' +
+      '</div>' +
+      '<div class="fallback">' +
+        'Don\'t have Blocknet Wallet yet?<br>' +
+        '<a href="https://github.com/blocknetprivacy/blocknet-tauri/releases">Download here</a>' +
+      '</div>' +
+    '</div>';
+
+  app.innerHTML = html;
+
+  document.getElementById('open-btn').addEventListener('click', function () {
+    window.location.href = uri;
+  });
+
+  setTimeout(function () { window.location.href = uri; }, 600);
+})();
+</script>
+</body>
+</html>
