@@ -21,8 +21,15 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 32px;
+}
+#app {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .brand {
   font-size: clamp(48px, 10vw, 96px);
@@ -86,10 +93,26 @@ body {
   opacity: 0.8;
   line-height: 2;
 }
+.footer {
+  width: 100%;
+  text-align: center;
+  font-size: 13px;
+  color: #fff;
+  opacity: 0.85;
+  padding-top: 16px;
+}
+.footer a {
+  color: #af0;
+  text-decoration: none;
+}
+.footer a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
 <div id="app"></div>
+<div class="footer">
+  made by <a href="https://bntpay.com/$bntpay?amount=100&amp;memo=thanks%20%3A%29">$bntpay</a>
+</div>
 <script>
 (function () {
   var path = window.location.pathname.replace(/^\/+/, '').replace(/\/+$/, '');
